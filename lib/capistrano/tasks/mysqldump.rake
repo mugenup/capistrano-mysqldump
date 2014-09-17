@@ -60,13 +60,17 @@ Capistrano::Configuration.instance(:must_exist).load do
       }
     end
 
-    def mysql_path(mysql_options)
+    def mysqldump_path(mysql_options)
       sprintf("mysqldump -u%{user} -p -h%{host} %{database}", mysql_options)
+    end
+
+    def mysql_path(mysql_options)
+      sprintf("mysql -u%{user} -p -h%{host} %{database}", mysql_options)
     end
 
     def dump_from(settings)
       mysql_options = get_mysql_options(settings)
-      dump_command = mysql_path(mysql_options)
+      dump_command = mysqldump_path(mysql_options)
 
       if ignore_tables = fetch(:mysqldump, {})[:ignore_tables]
         ignore_tables.each do |ignore_table_name|
