@@ -79,6 +79,7 @@ Capistrano::Configuration.instance(:must_exist).load do
         end
       end
 
+      dump_command += " --single-transaction" # Run MySQLDump without locking tables
       dump_command += sprintf(" > %{dumpsql_name}", mysql_options)
 
       run_with_password(dump_command, settings)
