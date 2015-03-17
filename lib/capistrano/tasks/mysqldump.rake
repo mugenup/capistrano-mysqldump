@@ -61,7 +61,7 @@ Capistrano::Configuration.instance(:must_exist).load do
     end
 
     def mysqldump_path(mysql_options)
-      sprintf("mysqldump -u%{user} -p -h%{host} %{database}", mysql_options)
+      sprintf("mysqldump --single-transaction -u%{user} -p -h%{host} %{database}", mysql_options)
     end
 
     def mysql_path(mysql_options)
