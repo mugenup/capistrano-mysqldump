@@ -105,7 +105,7 @@ namespace :mysqldump do
 
   def run_with_password(cmd, settings)
     execute cmd do |channel, stream, data|
-      channel.send_data("#{settings['password']}\n") if data.chomp == "Enter password: "
+      channel.send_data("#{settings['password']}\n") if data.chomp.strip == "Enter password:"
     end
   end
 
