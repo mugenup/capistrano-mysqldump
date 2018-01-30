@@ -65,16 +65,17 @@ namespace :mysqldump do
       user: settings['username'],
       host: settings['host'],
       database: settings['database'],
+      password: settings['password'],
       dumpsql_name: get_dump_path(settings)
     }
   end
 
   def mysqldump_path(mysql_options)
-    sprintf("mysqldump -u%{user} -p -h%{host} %{database}", mysql_options)
+    sprintf("mysqldump -u%{user} -p%{password} -h%{host} %{database}", mysql_options)
   end
 
   def mysql_path(mysql_options)
-    sprintf("mysql -u%{user} -p -h%{host} %{database}", mysql_options)
+    sprintf("mysql -u%{user} -p%{password} -h%{host} %{database}", mysql_options)
   end
 
   def dump_from(settings)
@@ -90,7 +91,7 @@ namespace :mysqldump do
     dump_command += " --single-transaction" # Run MySQLDump without locking tables
     dump_command += sprintf(" > %{dumpsql_name}", mysql_options)
 
-    run_with_password(dump_command, settings)
+    execute dump_command
   end
 
   def reset_by_sql_with(env)
@@ -100,13 +101,8 @@ namespace :mysqldump do
     mysql_options = get_mysql_options(settings)
     load_command = mysql_path(mysql_options)
     load_command += " < `ls -1tr ~/mysql_dump* | tail -n 1`"
-    run_with_password(load_command, settings)
-  end
 
-  def run_with_password(cmd, settings)
-    execute cmd do |channel, stream, data|
-      channel.send_data("#{settings['password']}\n") if data.chomp.strip == "Enter password:"
-    end
+    execute load_command
   end
 
   def reset_development_by_sql
