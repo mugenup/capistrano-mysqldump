@@ -12,8 +12,10 @@ namespace :mysqldump do
 
   desc "staging においてある sql をローカルに持ってきて、展開"
   task :get_server_data do
-    get_sql
-    reset_development_by_sql
+    on roles(:db) do
+      get_sql
+      reset_development_by_sql
+    end
   end
 
   desc "production の db を dump"
