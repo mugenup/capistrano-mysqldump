@@ -36,6 +36,7 @@ namespace :mysqldump do
   task :get_sql do
     on roles(:db) do
       latest_dump = capture("ls -1tr mysql_dump* | tail -n 1").chomp
+      puts "download: #{latest_dump}"
       download! latest_dump, latest_dump
     end
   end
@@ -108,8 +109,13 @@ namespace :mysqldump do
   end
 
   def reset_development_by_sql
-    system "bundle exec rake db:reset"
-    system "bundle exec rails db < `ls -1tr mysql_dump* | tail -n 1`"
+    db_reset = "bundle exec rake db:reset"
+    puts db_reset
+    system db_reset
+
+    db_import = "bundle exec rails db -p development < `ls -1tr mysql_dump* | tail -n 1`"
+    puts db_reset
+    system db_reset
   end
 
   def delete_production_sql
