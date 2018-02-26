@@ -36,7 +36,7 @@ namespace :mysqldump do
   task :get_sql do
     on roles(:db) do
       latest_dump = capture("ls -1tr mysql_dump* | tail -n 1").chomp
-      get latest_dump, latest_dump
+      download! latest_dump, latest_dump
     end
   end
 
