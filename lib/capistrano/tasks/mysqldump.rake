@@ -94,6 +94,7 @@ namespace :mysqldump do
     dump_command += " --single-transaction" # Run MySQLDump without locking tables
     dump_command += sprintf(" > %{dumpsql_name}", mysql_options)
 
+    puts dump_command
     execute dump_command
   end
 
